@@ -57,3 +57,7 @@ ul.posts {
 ul.posts li {
   list-style: none;
 }
+.image {
+  width: 50%;
+  margin: 30px auto;
+}
