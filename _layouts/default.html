@@ -2,22 +2,36 @@
 <html>
   <head>
     <title>{{ page.title }}</title>
-      <!-- link to main stylesheet -->
-      <link rel="stylesheet" type="text/css" href="/css/main.css">
-    </head>
+    <!-- link to main stylesheet -->
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" href="fa/css/all.css">
+    <script>
+      function navExpand() {
+        var x = document.getElementById("siteTopNav");
+        if (x.className === "topnav") {
+          x.className += " responsive";
+        } else {
+          x.className = "topnav";
+        }
+      }
+    </script>
+  </head>
   <body>
-    <h1>The Cairns' Neurobiology Lab</h1>
-    <nav>
-      <ul>
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="/labmembers.html">Lab Members</a></li>
-        <li><a href="/research.html">Research</a></li>
-        <li><a href="/publications.html">Publications</a></li>
-        <li><a href="/news.html">News</a></li>
-        <li><a href="/software.html">Software</a></li>
-        <li><a href="/aboutnewcastle.html">About Newcastle</a></li>
-      </ul>
-    </nav>
+    <header>
+      <h1>The Cairns' Neurobiology Lab</h1>
+      <div class="topnav" id="siteTopNav">
+        <a href="/index.html" class=pageHome>Home</a>
+        <a href="/labmembers.html">Lab Members</a>
+        <a href="/research.html">Research</a>
+        <a href="/publications.html">Publications</a>
+        <a href="/news.html">News</a>
+        <a href="/software.html">Software</a>
+        <a href="/aboutnewcastle.html">About Newcastle</a>
+        <a href="javascript:void(0);" class="icon" onclick="navExpand()">
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+    </header>
     <div class="container">
 
     {{ content }}
