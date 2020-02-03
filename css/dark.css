@@ -1,0 +1,27 @@
+html {
+  background-color: #2e2e2e;
+}
+body {
+  color: #ddd;
+}
+a {
+  color: inherit;
+}
+h1 {
+  color: inherit;
+}
+h2 {
+  color: inherit;
+}
+p {
+  color: inherit;
+}
+.topnav {
+  background-color: transparent;
+}
+.topnav a:hover {
+  background-color: #9db9c2;
+}
+.topnav a.active {
+  background-color: #6396a6;
+}
