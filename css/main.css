@@ -1,6 +1,4 @@
 body {
-  /* text-align: center; */
-  /* padding: 150px; */
   margin: 30px;
   width: auto;
   font: 20px Helvetica, sans-serif;
@@ -22,14 +20,15 @@ h2 {
   font-family:'Helvetica', 'Arial', 'Sans-Serif';
 }
 h3 {
-  font-size: 1em;
+  font-size: 1.2em;
   font-style: italic;
   font-weight: normal;
 }
 p {
-  font-size: 0.8em;
-  line-height: 1.2em;
-  color: #333;
+  font-size: inherit;
+	color: inherit;
+  /* line-height: 1.2em; */
+  /* color: #333; */
 }
 header {
   border-bottom: 1px solid #d5d5d5;
@@ -103,10 +102,3 @@ nav ul li, footer ul li {
   display: inline;
   margin-right: 20px;
 }
-/* ul.posts {
-  margin: 20px auto 40px;
-  font-size: 1.5em;
-}
-ul.posts li {
-  list-style: none;
-} */
