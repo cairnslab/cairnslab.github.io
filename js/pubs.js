@@ -1,3 +1,4 @@
+document.getElementById("publicationIDs").innerHTML = ("<i>Loading...</i>");
 var request = new XMLHttpRequest();
 var pubmedUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=(Cairns+MJ[Author])+AND+(Newcastle+OR+Sydney)+AND+Australia*&retmax=10&sort=pub+date";
 request.open("GET", pubmedUrl, true);
@@ -14,6 +15,7 @@ request.onload = function(e) {
     var request2 = new XMLHttpRequest();
     request2.open("GET", pubmedUrl2, false);
     request2.onload = function(f) {
+      document.getElementById("publicationIDs").innerHTML = ("");
       var xml2 = request2.responseXML;
       var ids = xml2.getElementsByTagName("DocSum");
       for (var j = 0; j < ids.length; j++) {
