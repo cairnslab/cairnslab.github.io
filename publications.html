@@ -7,9 +7,35 @@ title: Cairns' Lab Publications
   x.className = "active";
 </script>
 <div class="blurb">
-  <h2>Publications</h1>
+  <h2>Publications</h2>
   <div>
-    <p>The site is currently under construction...</p>
-    <p>&mdash; The Cairns' Lab team</p>
+    <p id="publicationIDs"></p>
   </div>
+  <script>
+    var request = new XMLHttpRequest();
+    pubmedUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=Cairns%20MJ[Author]&retmax=10&sort=pub+date";
+    request.open("GET", pubmedUrl, false);
+    request.send();
+    var xml = request.responseXML;
+    var pubids = xml.getElementsByTagName("Id");
+    pubmedIds = "";
+    for (var i = 0; i < pubids.length; i++) {
+      //document.getElementById("publicationIDs").innerHTML += ("<p>" + pubids[i].childNodes[0].nodeValue + "</p>");
+      pubmedIds += pubids[i].childNodes[0].nodeValue + ",";
+    }
+    pubmedIds = pubmedIds.replace(/,$/g, "");
+    pubmedUrl = ("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + pubmedIds);
+    var request = new XMLHttpRequest();
+    request.open("GET", pubmedUrl, false);
+    // request.open("GET", "/xml/test.xml", false);
+    request.send();
+    var xml = request.responseXML;
+    var pubnames = xml.getElementsByTagName("Item");
+    for (var i = 0; i < pubnames.length; i++) {
+      n = pubnames[i].getAttribute("Name");
+      if (n == "Title") {
+        document.getElementById("publicationIDs").innerHTML += ("<p>" + pubnames[i].childNodes[0].nodeValue + "</p>");
+      }
+    }
+  </script>
 </div><!-- /.blurb -->
