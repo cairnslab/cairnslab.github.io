@@ -19,6 +19,7 @@ request.onload = function(e) {
       var xml2 = request2.responseXML;
       var ids = xml2.getElementsByTagName("DocSum");
       for (var j = 0; j < ids.length; j++) {
+        var articleUrl = ("https://pubmed.ncbi.nlm.nih.gov/" + ids[j].getElementsByTagName("Id")[0].childNodes[0].nodeValue);
         var pubnames = ids[j].getElementsByTagName("Item");
         var authors = [];
         var year = "";
@@ -46,15 +47,8 @@ request.onload = function(e) {
           }
         }
         var citation = (authorlist + " (" + year + "). <i>" + title + "</i>. " + source + ".");
-        document.getElementById("publicationIDs").innerHTML += ("<li>" + citation + "</li>");
-        // for (var i = 0; i < pubnames.length; i++) {
-        //   n = pubnames[i].getAttribute("Name");
-        //   if (n == "Title") {
-        //     document.getElementById("publicationIDs").innerHTML += ("<p>" + pubnames[i].childNodes[0].nodeValue + "</p>");
-        //   }
-        // }
+        document.getElementById("publicationIDs").innerHTML += ("<li><a href=\"" + articleUrl + "\" target=\"_blank\">" + citation + "</a></li>");
       }
-      // var pubnames = xml2.getElementsByTagName("Item");
     }
     request2.onerror = function(f) {
       document.getElementById("publicationIDs").innerHTML += request.statusText;

@@ -6,7 +6,7 @@ body {
 }
 a {
   text-decoration: none;
-  color: #999;
+  color: #666;
 }
 a:hover {
   text-decoration: underline;
@@ -39,7 +39,7 @@ footer {
 }
 .topnav {
   overflow: hidden;
-  background-color: #333;
+  background-color: #2e2e2e;
 }
 .topnav a {
   float: left;
@@ -51,11 +51,11 @@ footer {
   font-size: 17px;
 }
 .topnav a:hover {
-  background-color: #ddd;
+  background-color: #c7d5d9;
   color: black;
 }
 .topnav a.active {
-  background-color: #4CAF50;
+  background-color: #6396a6;
   color: white;
 }
 .topnav .icon {
