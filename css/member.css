@@ -3,6 +3,9 @@
 .member {
   clear: both;
 }
+.member a{
+  text-decoration: underline;
+}
 .memberSep {
   border-top: 1px solid #666;
 }
