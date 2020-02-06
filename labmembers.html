@@ -14,14 +14,18 @@ title: Cairns Lab Members
       {% if forloop.first != true %}
         <div class="memberSep"></div>
       {% endif %}
+      {% if member.github != "NA" %}
+        <h3>{{ member.name }} >> <a href="{{ member.github }}" target="_blank">GitHub</a></h3>
+      {% else %}
         <h3>{{ member.name }}</h3>
-        <div class="memberProfile">
-            <img src={{ member.image }} class="profilePic">
-          <div class="profileDescription">
-            {{ member.description }}
-          </div>
+      {% endif %}
+      <div class="memberProfile">
+          <img src="{{ member.image }}" class="profilePic">
+        <div class="profileDescription">
+          {{ member.description }}
         </div>
       </div>
+    </div>
   {% endfor %}
   <div class="member"></div><!-- clear float -->
 </div>
