@@ -2,14 +2,22 @@
 layout: default
 title: About Newcastle
 ---
+<link rel="stylesheet" type="text/css" href="/css/aboutnewcastle.css">
 <script>
   var x = document.getElementById("pageNewcastle");
   x.className = "active";
 </script>
-<div>
-  <h2>About Newcastle</h2>
+<div class="aboutnewcastle">
+  {% for item in site.data.aboutnewcastle %}
+  <h2>{{ item.heading }}</h2>
   <div>
-    <p>The site is currently under construction...</p>
-    <p>&mdash; The Cairns Lab team</p>
+    <p>{{ item.description }}</p>
+    {% if item.website != "NA" %}
+      <p>&mdash; Website: <a href="{{ item.website }}" target="_blank">{{ item.website }}</a></p>
+    {% endif %}
+    {% if item.photo != "NA" %}
+      <img src="{{ item.photo }}" class="newcastlePic">
+    {% endif %}
   </div>
+  {% endfor %}
 </div>
