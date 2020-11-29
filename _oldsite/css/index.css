@@ -1,0 +1,16 @@
+.labPic {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  max-width: 1200px;
+}
+@media screen and (max-width: 600px) {
+  .labPic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 600px;
+  }
+}
