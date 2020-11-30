@@ -3,7 +3,7 @@
 	--light-gray: #efefef;
 	--dark-gray-t: rgba(34, 34, 34,var(--opacity));
 	--toggle-height: 10px;
-	--sidebar-width: 25vw;
+	--sidebar-width: 200px;
 }
 
 .sidebar-element {
@@ -76,4 +76,20 @@ h2.sidebar-element {
 .sidebar-toggle.visible {
 	right: calc(var(--sidebar-width) + 20px);
 	transition: right 1s ease;
+}
+
+@media screen and (max-width: 310px) {
+	:root {
+		--sidebar-width: 75vw;
+	}
+	.sidebar-toggle {
+
+	}
+	.sidebar-toggle.visible {
+		right: 10px;
+	}
+
+	h2.sidebar-element {
+		padding-top: 40px;
+	}
 }
