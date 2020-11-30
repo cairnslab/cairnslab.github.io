@@ -6,6 +6,7 @@ module.exports = {
 		members: './src/js/members.js',
 		newcastle: './src/js/newcastle.js',
 		pubs: './src/js/pubs.js',
+		sidebar: './src/js/sidebar.js',
 	},
 	output: {
 		filename: './js/[name].js',

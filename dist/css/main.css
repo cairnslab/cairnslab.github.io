@@ -81,9 +81,9 @@ a:hover {
 	text-decoration: underline;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 675px) {
 	.header h1 {
-		font-size: 1.5em;
+		font-size: 3em;
 	}
 	:root {
 		--header-height: 75px;
@@ -106,7 +106,22 @@ a:hover {
 	}
 }
 
-@media screen and (max-width: 300px) {
+@media screen and (max-width: 500px) {
+	.header h1 {
+		font-size: 2em;
+	}
+}
+
+@media screen and (max-width: 400px) {
+	.header h1 {
+		font-size: 1.5em;
+	}
+}
+
+@media screen and (max-width: 310px) {
+	.header h1 {
+		font-size: 1em;
+	}
 	#background {
 		height: var(--photo-height-xs);
 	}

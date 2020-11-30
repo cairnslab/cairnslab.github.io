@@ -17,16 +17,6 @@ const delayRequest = (time, param, tries, callback) => {
 		}, time);
 		return result;
 	});
-	/*
-	let promise = new Promise(resolve => {
-		let pubMedIds;
-		setTimeout(() => {
-			pubMedIds = resolve(param, tries);
-		}, time);
-		return pubMedIds;
-	});
-	return promise;
-	*/
 };
 
 const getPubMedIds = (url) => {
