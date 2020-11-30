@@ -35,6 +35,18 @@ const Sidebar = (props) => {
 	);
 }
 
+const SidebarToggle = (props) => {
+	let show = props.show;
+	let handleClick = props.onClick;
+	let className = "sidebar-toggle";
+	className += show ? " visible" : "";
+	return (
+		<a href="javascript:void(0);" className={className} onClick={handleClick}>
+			<i className="fas fa-bars"></i>
+		</a>
+	);
+}
+
 class SidebarWrapper extends React.Component {
 	constructor(props) {
 		super(props);
@@ -53,9 +65,7 @@ class SidebarWrapper extends React.Component {
 	render() {
 		return (
 			<div id="sidebar-wrapper">
-				<a href="javascript:void(0);" className="sidebar-toggle" onClick={this.handleClick}>
-					<i className="fas fa-bars"></i>
-				</a>
+				<SidebarToggle show={this.state.show} onClick={this.handleClick} />
 				<Sidebar csvData={this.props.csvData} show={this.state.show} />
 			</div>
 		);
