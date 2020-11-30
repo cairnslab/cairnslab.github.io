@@ -62,7 +62,7 @@ body {
 }
 
 #main {
-	min-height: 100vh;
+	min-height: calc(100vh - var(--header-height) - 60px);
 	background-color: var(--light-gray);
 	padding: 30px;
 }
