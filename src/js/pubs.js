@@ -9,14 +9,40 @@ const xmlOptions = {
 	ignoreAttributes: false
 };
 
+const delayRequest = (time, param, tries, callback) => {
+	return new Promise(() => {
+		let result;
+		setTimeout(() => {
+			result = callback(param, tries);
+		}, time);
+		return result;
+	});
+	/*
+	let promise = new Promise(resolve => {
+		let pubMedIds;
+		setTimeout(() => {
+			pubMedIds = resolve(param, tries);
+		}, time);
+		return pubMedIds;
+	});
+	return promise;
+	*/
+};
+
 const getPubMedIds = (url) => {
-	const pubMedIds = fetch(url)
+	const pubMedIds = fetch(url, {
+		method: 'GET',
+		mode: 'cors'
+	})
 		.then(response => response.text())
 		.then(data => {
 			let json = xmlparser.parse(data, xmlOptions);
 			let ids = json.eSearchResult.IdList.Id;
 			return ids;
-		});
+		}); /*
+		.catch(error => {
+			console.log("Error: failed to fetch PubMed IDs.")
+		}); */
 	return pubMedIds;
 };
 
@@ -75,7 +101,10 @@ const getPubMedInfo = (pubMedId) => {
 				title: title,
 				source: source
 			};
-		});
+		}); /*
+		.catch(error => {
+			console.log("Error: failed to fetch PubMed info.");
+		}); */
 	return pubMedInfo;
 }
 
@@ -85,10 +114,11 @@ class PubMedItem extends React.Component {
 		this.state = {
 			loaded: false
 		};
+		this.setPubMedInfo = this.setPubMedInfo.bind(this);
 	}
 
-	componentDidMount() {
-		let publication;
+	setPubMedInfo(attempts) {
+		console.log("Attempting to retrieve PubMed info (" + attempts + " attempts left)");
 		getPubMedInfo(this.props.id)
 			.then(data => {
 				this.setState({
@@ -98,8 +128,20 @@ class PubMedItem extends React.Component {
 					title: data.title,
 					source: data.source
 				});
-			}
-		);
+			})
+			.catch(error => {
+				if (attempts < 2) {
+					console.log("Error loading PubMed info.");
+				} else {
+					setTimeout(() => {
+						this.setPubMedInfo(attempts - 1);
+					}, 1000);
+				}
+			});
+	}
+
+	componentDidMount() {
+		this.setPubMedInfo(5);
 	}
 
 	render() {
@@ -121,9 +163,11 @@ class PubMedList extends React.Component {
 			ids: [],
 			citations: []
 		};
+		this.setPubMedIds = this.setPubMedIds.bind(this);
 	}
 
-	componentDidMount() {
+	setPubMedIds(attempts) {
+		console.log("Attempting to retrieve PubMed IDs (" + attempts + " attempts left)");
 		getPubMedIds(this.props.url)
 			.then(ids => {
 				let citations = [];
@@ -134,7 +178,19 @@ class PubMedList extends React.Component {
 					loaded: true,
 					citations: citations
 				});
+			}).catch(error => {
+				if (attempts < 2) {
+					console.log("Error loading PubMed ID list.");
+				} else {
+					setTimeout(() => {
+						this.setPubMedIds(attempts - 1);
+					}, 1000);
+				}
 			});
+	}
+
+	componentDidMount() {
+		this.setPubMedIds(5);
 	}
 
 	render() {

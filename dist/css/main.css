@@ -36,6 +36,8 @@ body {
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0px;
+	display: flex;
+	justify-content: space-around;
 }
 
 #main-header {
@@ -49,6 +51,14 @@ body {
 	color: var(--light-gray);
 	font-size: 4em;
 	text-align: center;
+}
+
+#uon-logo {
+	height: var(--header-height);
+}
+
+#header-end {
+	width: var(--header-height);
 }
 
 #main {
