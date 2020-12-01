@@ -1,0 +1,61 @@
+:root {
+  --github-link-size: 1em;
+}
+
+.member-list {
+
+}
+
+.member {
+  clear: both;
+}
+
+.member a{
+  text-decoration: underline;
+}
+
+.github {
+  font-size: var(--github-link-size);
+}
+
+.member-sep {
+  border-top: 1px solid #666;
+  max-width: 1060px;
+  margin-bottom: 50px;
+}
+.member-profile {
+  min-height: 160px;
+  margin-bottom: 50px;
+}
+.profile-pic {
+  float: left;
+  width: 150px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.profile-description {
+  text-align: left;
+  display: block;
+  margin-bottom: 10px;
+  margin-left: 160px;
+  max-width: 900px;
+}
+@media screen and (max-width: 600px) {
+  .member-profile {
+    display: block;
+  }
+  .profile-pic {
+    float: none;
+    width: 150px;
+    align-self: auto;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+  .profile-description {
+    display: block;
+    margin-left: auto;
+    max-width: 100%;
+    text-align: left;
+  }
+}
