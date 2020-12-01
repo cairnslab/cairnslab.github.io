@@ -20,6 +20,7 @@
 h2.sidebar-element {
 	margin-top: 0px;
 	margin-bottom: 0px;
+	padding-top: 40px;
 }
 
 .sidebar-link {
@@ -47,13 +48,13 @@ h2.sidebar-element {
 	background-color: var(--dark-gray-t);
 	position: fixed;
 	top: 0px;
-	right: calc(-10px - var(--sidebar-width));
-	transition: right 1s ease;
+	left: calc(100vw + 10px);
+	transition: left 1s ease;
 }
 
 .sidebar.visible {
-	right: 0px;
-	transition: right 1s ease;
+	left: calc(100vw - var(--sidebar-width));
+	transition: left 1s ease;
 }
 
 #sidebar-wrapper {
@@ -70,26 +71,32 @@ h2.sidebar-element {
 	font-size: 2em;
 	z-index: 10;
 	color: var(--light-gray);
-	transition: right 1s ease;
+	/*transition: right 1s ease;*/
 }
 
 .sidebar-toggle.visible {
+	/*
 	right: calc(var(--sidebar-width) + 20px);
 	transition: right 1s ease;
+	*/
 }
 
 @media screen and (max-width: 310px) {
 	:root {
-		--sidebar-width: 75vw;
+		--sidebar-width: 100vw;
+	}
+	.sidebar.visible {
+		left: 0px;
+		transition: left 1s ease;
 	}
 	.sidebar-toggle {
 
 	}
 	.sidebar-toggle.visible {
-		right: 10px;
+		/*right: 10px;*/
 	}
 
 	h2.sidebar-element {
-		padding-top: 40px;
+		/*padding-top: 40px;*/
 	}
 }
