@@ -9,189 +9,120 @@ const xmlOptions = {
 	ignoreAttributes: false
 };
 
-const delayRequest = (time, param, tries, callback) => {
-	return new Promise(() => {
-		let result;
-		setTimeout(() => {
-			result = callback(param, tries);
-		}, time);
-		return result;
-	});
-};
+const corsProxy = "https://cors-anywhere.herokuapp.com/";
 
-const getPubMedIds = (url) => {
-	const pubMedIds = fetch(url, {
-		method: 'GET',
-		mode: 'cors'
-	})
-		.then(response => response.text())
-		.then(data => {
-			let json = xmlparser.parse(data, xmlOptions);
-			let ids = json.eSearchResult.IdList.Id;
-			return ids;
-		}); /*
-		.catch(error => {
-			console.log("Error: failed to fetch PubMed IDs.")
-		}); */
-	return pubMedIds;
-};
-
-const getPubMedInfo = (pubMedId) => {
-	let argType = typeof(pubMedId);
-	let newId;
-	if (argType === "number") {
-		newId = pubMedId.toString();
-	} else if (argType === "string") {
-		newId = pubMedId;
-	} else {
-		return null;
-	}
-	const idRegex = /^\d+$/;
-	if (!idRegex.test(newId)) {
-		return null;
-	}
-	let url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pubmed&id=" + newId;
-	const pubMedInfo = fetch(url)
-		.then(response => response.text())
-		.then(data => {
-			let json = xmlparser.parse(data, xmlOptions);
-			let info = json.eSummaryResult.DocSum.Item;
-			let filtFields = ['AuthorList', 'PubDate', 'Title', 'Source'];
-			let filtInfo = info.filter(x => {
-				return filtFields.includes(x.Name);
-			});
-			let authors = filtInfo.filter(x => (x.Name === "AuthorList"))[0]
-				.Item.map(y => {
-					return y['#text'].split(" ")[0];
-			});
-			let authorString;
-			if (authors.length === 1) {
-				authorString = authors[0];
-			} else if (authors.length === 2) {
-				authorString = authors[0] + " and " + authors[1];
-			} else if (authors.length === 3) {
-				authorString = authors[0] + ", " + authors[1] + ", and " + authors[2];
-			} else if (authors.length > 3) {
-				authorString = authors[0] + " et al.";
+const fetchPubMed = (url) => {
+	return new Promise((resolve, reject) => {
+		const request = new XMLHttpRequest();
+		request.open("GET", url, true);
+		request.onload = (e) => {
+			if (request.readyState === 4 && request.status === 200) {
+				let json = xmlparser.parse(request.responseText, xmlOptions);
+				resolve(json);
 			} else {
-				return null;
+				reject(e);
 			}
-			let year = filtInfo.filter(x => (x.Name === "PubDate"))[0]
-				['#text'].split(" ")[0];
-			let title = filtInfo.filter(x => (x.Name === "Title"))[0]
-				['#text'].replace(/\.$/, "");
-			title = he.decode(title);
-			title = title.replace(/(<([^>]+)>)/gi, "");  // strip out any html tags
-			title = he.decode(title);
-			let source = filtInfo.filter(x => (x.Name === "Source"))[0]
-				['#text'];
-			return {
-				author: authorString,
-				year: year,
-				title: title,
-				source: source
-			};
-		}); /*
-		.catch(error => {
-			console.log("Error: failed to fetch PubMed info.");
-		}); */
-	return pubMedInfo;
+		}
+		request.send();
+	});
 }
 
-class PubMedItem extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			loaded: false
-		};
-		this.setPubMedInfo = this.setPubMedInfo.bind(this);
-	}
-
-	setPubMedInfo(attempts) {
-		console.log("Attempting to retrieve PubMed info (" + attempts + " attempts left)");
-		getPubMedInfo(this.props.id)
-			.then(data => {
-				this.setState({
-					loaded: true,
-					author: data.author,
-					year: data.year,
-					title: data.title,
-					source: data.source
-				});
-			})
-			.catch(error => {
-				if (attempts < 2) {
-					console.log("Error loading PubMed info.");
+const getPubMedRss = (url) => {
+	let pubMedData = fetchPubMed(url)
+		.then(json => {
+			let citationArray = json.rss.channel.item;
+			let newCitationArray = citationArray.map(x => {
+				let authors = x["dc:creator"];
+				if (typeof(authors) === "string") {
+					authors = authors.split(" ").pop();
 				} else {
-					setTimeout(() => {
-						this.setPubMedInfo(attempts - 1);
-					}, 1000);
+					authors = authors.map(x => {
+						return x.split(" ").pop();
+					});
+					switch(authors.length) {
+						case 1:
+							authors = authors[0];
+							break;
+						case 2:
+							authors = authors[0] + " and " + authors[1];
+							break;
+						case 3:
+							authors = authors[0] + ", " + authors[1] + ", and " + authors[2];
+							break;
+						default:
+							authors = authors[0] + " et al.";
+							break;
+					}
 				}
+				let title = he.decode(x["dc:title"]);
+				title = title.replace(/(<([^>]+)>)/gi, "");  // strip out any html tags
+				title = he.decode(title);
+				return {
+					title: title,
+					source: x["dc:source"],
+					year: x["dc:date"].split("-")[0],
+					authors: authors,
+					link: x["link"]
+				};
 			});
-	}
-
-	componentDidMount() {
-		this.setPubMedInfo(5);
-	}
-
-	render() {
-		return (
-			this.state.loaded ?
-				(<li>
-					{this.state.author} ({this.state.year}). <span className="pub-title">{this.state.title}</span>. {this.state.source}.
-				</li>) :
-				(<li>...</li>)
-		);
-	}
+			return newCitationArray;
+		});
+	return pubMedData;
 }
+
+const PubMedItem = (props) => {
+	return (
+		<li>
+			<a href={props.data.link} target="_blank">
+				<span className="pub-authors">{props.data.authors}</span> ({props.data.year}). <span className="pub-title">{props.data.title}</span>. <span className="pub-source">{props.data.source}</span>.
+			</a>
+		</li>
+	)
+};
 
 class PubMedList extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loaded: false,
-			ids: [],
+			failed: false,
+			numRecords: 0,
 			citations: []
 		};
-		this.setPubMedIds = this.setPubMedIds.bind(this);
-	}
-
-	setPubMedIds(attempts) {
-		console.log("Attempting to retrieve PubMed IDs (" + attempts + " attempts left)");
-		getPubMedIds(this.props.url)
-			.then(ids => {
-				let citations = [];
-				for (let i = 0; i < ids.length; i++) {
-					citations.push((<PubMedItem id={ids[i]} />))
-				}
-				this.setState({
-					loaded: true,
-					citations: citations
-				});
-			}).catch(error => {
-				if (attempts < 2) {
-					console.log("Error loading PubMed ID list.");
-				} else {
-					setTimeout(() => {
-						this.setPubMedIds(attempts - 1);
-					}, 1000);
-				}
-			});
 	}
 
 	componentDidMount() {
-		this.setPubMedIds(5);
+		getPubMedRss(this.props.url)
+			.then(data => {
+				let citations = data.map(x => {
+					return (<PubMedItem data={x} />);
+				});
+				this.setState({
+					loaded: true,
+					numRecords: citations.length,
+					citations: citations
+				});
+			})
+			.catch(error => {
+				console.log("Error loading PubMed data.");
+				console.log(error);
+				this.setState({
+					failed: true
+				});
+			});
 	}
 
 	render() {
 		return (
 			this.state.loaded ?
-				(this.state.citations) :
-				("...")
+				(<ul>{this.state.citations}</ul>) :
+				this.state.failed ?
+					("Error loading PubMed data.") :
+					("Loading...")
 		);
 	}
 }
 
-const pubMedUrl = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=(Cairns+MJ[Author])+AND+(Newcastle+OR+Sydney)+AND+Australia*&retmax=10&sort=pub+date";
+const pubMedUrl = corsProxy + "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
 const wrapper = document.getElementById("container");
 wrapper ? ReactDOM.render(<PubMedList url={ pubMedUrl } />, wrapper) : false;

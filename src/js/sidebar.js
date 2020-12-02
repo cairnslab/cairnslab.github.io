@@ -22,7 +22,7 @@ const Sidebar = (props) => {
 	for (let i = 0; i < sidebarLen; i++) {
 		let elem = csvData[i];
 		elem.last = (i === (sidebarLen - 1));
-		if (currentPage === "" && elem.url === "./index.html") {
+		if ((currentPage === "" || window.location.pathname.split("/").length === 1) && elem.url === "./index.html") {
 			elem.currentPage = true;
 		} else {
 			elem.currentPage = (elem.url === ("./" + currentPage));

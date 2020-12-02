@@ -7,6 +7,7 @@ module.exports = {
 		newcastle: './src/js/newcastle.js',
 		pubs: './src/js/pubs.js',
 		sidebar: './src/js/sidebar.js',
+		footer: './src/js/footer.js',
 	},
 	output: {
 		filename: './js/[name].js',
