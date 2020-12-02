@@ -1,5 +1,6 @@
 :root {
 	--dark-gray: #222;
+	--medium-gray: #666;
 	--light-gray: #efefef;
 	--pale-red: rgb(235, 221, 221);
 	--header-height: 100px;
@@ -128,4 +129,19 @@ a:hover {
 	#main-header {
 		margin-top: var(--photo-height-xs);
 	}
+}
+
+#footer-list {
+	list-style: none;
+	border-top: solid 1px var(--medium-gray);
+	width: 90vw;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 20px;
+}
+
+#footer-list li {
+	display: inline;
+	margin-right: 20px;
+	font-weight: bold;
 }
