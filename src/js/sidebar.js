@@ -22,7 +22,11 @@ const Sidebar = (props) => {
 	for (let i = 0; i < sidebarLen; i++) {
 		let elem = csvData[i];
 		elem.last = (i === (sidebarLen - 1));
-		elem.currentPage = (elem.url === ("./" + currentPage));
+		if (currentPage === "" && elem.url === "./index.html") {
+			elem.currentPage = true;
+		} else {
+			elem.currentPage = (elem.url === ("./" + currentPage));
+		}
 		sidebar.push(SidebarElement(elem));
 	}
 	let className = "sidebar";
