@@ -6,6 +6,9 @@ const LabMember = (obj) => {
 	let gitHubLink = obj.github && obj.github != "NA" ?
 		(<p className="github">&mdash; GitHub: <a href={obj.github} target="_blank" className="github-link">{obj.github}</a></p>) :
 		"";
+	let profileLink = obj.profile && obj.profile != "NA" ?
+(<p className="profile">&mdash; UoN Staff Profile: <a href={obj.profile} target="_blank" className="profile-link">{obj.profile}</a></p>) :
+		"";
 	return (
 		<div className="member">
 			<h3>{obj.name}</h3>
@@ -14,6 +17,7 @@ const LabMember = (obj) => {
 				<div className="profile-description">
 					{obj.description}
 					{gitHubLink}
+					{profileLink}
 				</div>
 			</div>
 		</div>

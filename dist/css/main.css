@@ -145,3 +145,10 @@ a:hover {
 	margin-right: 20px;
 	font-weight: bold;
 }
+
+/* #footer {
+	position: fixed;
+	bottom: 0px;
+	background-color: var(--light-gray);
+	width: 100%;
+} */
