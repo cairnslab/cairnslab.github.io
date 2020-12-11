@@ -7,10 +7,12 @@
 }
 
 .sidebar-element {
-	width: 100%;
+	--text-padding: 10px;
+	width: calc(100% - 2 * var(--text-padding));
 	height: 50px;
 	background-color: var(--dark-gray-t);
-	padding: 10px;
+	padding: var(--text-padding);
+	margin: 0px;
 	color: var(--light-gray);
 	border-bottom: solid 1px black;
 	display: flex;
@@ -49,14 +51,22 @@ h2.sidebar-element {
 	background-color: var(--dark-gray-t);
 	position: fixed;
 	top: 0px;
-	left: calc(100vw + 10px);
-	transition: left 1s ease, opacity 1s ease;
+	margin: 0px;
+	padding: 0px;
+	/* left: calc(100vw + 10px); */
+	right: calc(var(--sidebar-width) * (-1) - 10px);
+	/* transition: left 1s ease, opacity 1s ease; */
+	transition: right 1s ease, opacity 1s ease;
 }
 
 .sidebar.visible {
+	margin: 0px;
+	padding: 0px;
 	opacity: 1;
-	left: calc(100vw - var(--sidebar-width));
-	transition: left 1s ease, opacity 1s ease;
+	/* left: calc(100vw - var(--sidebar-width)); */
+	right: 0px;
+	/* transition: left 1s ease, opacity 1s ease; */
+	transition: right 1s ease, opacity 1s ease;
 }
 
 #sidebar-wrapper {
@@ -64,6 +74,8 @@ h2.sidebar-element {
 	top: 0px;
 	right: 0px;
 	z-index: 9;
+	margin: 0px;
+	padding: 0px;
 }
 
 .sidebar-toggle {
@@ -73,7 +85,14 @@ h2.sidebar-element {
 	font-size: 2em;
 	z-index: 10;
 	color: var(--light-gray);
+	margin: 0px;
+	padding: 0px;
 	/*transition: right 1s ease;*/
+}
+
+#sidebar-container {
+	margin: 0px;
+	padding: 0px;
 }
 
 .sidebar-toggle.visible {
@@ -87,8 +106,16 @@ h2.sidebar-element {
 	:root {
 		--sidebar-width: 100vw;
 	}
+	.sidebar {
+		left: calc(100vw + 10px);
+		transition: left 1s ease, opacity 1s ease;
+	}
 	.sidebar.visible {
+		/* left: 0px;
+		transition: left 1s ease; */
+		right: 0px;
 		left: 0px;
+		transition: right 1s ease;
 		transition: left 1s ease;
 	}
 	.sidebar-toggle {
