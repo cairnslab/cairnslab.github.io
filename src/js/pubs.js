@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import Data from '../data/latestpubs.csv';
 
 const xmlparser = require('fast-xml-parser');
 const he = require('he');
@@ -71,6 +72,22 @@ const getPubMedRss = (url) => {
 	return pubMedData;
 }
 
+const getPubMedCsv = (csvData) => {
+	let lenData = csvData.length;
+	let pubList = [];
+	for (let i = 0; i < lenData; i++) {
+		let pub = csvData[i];
+		pubList.push({
+			title: pub.title,
+			source: pub.source,
+			year: pub.year,
+			authors: pub.authors,
+			link: pub.link
+		});
+	}
+	return pubList;
+};
+
 const PubMedItem = (props) => {
 	return (
 		<li>
@@ -93,24 +110,36 @@ class PubMedList extends React.Component {
 	}
 
 	componentDidMount() {
-		getPubMedRss(this.props.url)
-			.then(data => {
-				let citations = data.map(x => {
-					return (<PubMedItem data={x} />);
+		if (this.props.hasOwnProperty('url') && this.props.url) {
+			getPubMedRss(this.props.url)
+				.then(data => {
+					let citations = data.map(x => {
+						return (<PubMedItem data={x} />);
+					});
+					this.setState({
+						loaded: true,
+						numRecords: citations.length,
+						citations: citations
+					});
+				})
+				.catch(error => {
+					console.log("Error loading PubMed data.");
+					console.log(error);
+					this.setState({
+						failed: true
+					});
 				});
-				this.setState({
-					loaded: true,
-					numRecords: citations.length,
-					citations: citations
-				});
-			})
-			.catch(error => {
-				console.log("Error loading PubMed data.");
-				console.log(error);
-				this.setState({
-					failed: true
-				});
+		} else {
+			let pubMedList = getPubMedCsv(Data);
+			let citations = pubMedList.map(x => {
+				return (<PubMedItem data={x} />);
 			});
+			this.setState({
+				loaded: true,
+				numRecords: citations.length,
+				citations: citations
+			});
+		}
 	}
 
 	render() {
@@ -124,6 +153,8 @@ class PubMedList extends React.Component {
 	}
 }
 
-const pubMedUrl = corsProxy + "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
+// const pubMedUrl = corsProxy + "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
+const pubMedUrl = "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
 const wrapper = document.getElementById("container");
-wrapper ? ReactDOM.render(<PubMedList url={ pubMedUrl } />, wrapper) : false;
+// wrapper ? ReactDOM.render(<PubMedList url={ pubMedUrl } />, wrapper) : false;
+wrapper ? ReactDOM.render(<PubMedList />, wrapper) : false;
