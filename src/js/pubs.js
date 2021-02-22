@@ -9,7 +9,8 @@ const xmlOptions = {
 	ignoreAttributes: false
 };
 
-const corsProxy = "https://cors-anywhere.herokuapp.com/";
+// const corsProxy = "https://cors-anywhere.herokuapp.com/";
+const corsProxy = "https://cors-proxy.htmldriven.com/?url=";
 
 const fetchPubMed = (url) => {
 	return new Promise((resolve, reject) => {
