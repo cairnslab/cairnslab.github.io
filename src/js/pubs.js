@@ -12,6 +12,7 @@ const xmlOptions = {
 
 // const corsProxy = "https://cors-anywhere.herokuapp.com/";
 const corsProxy = "https://cors-proxy.htmldriven.com/?url=";
+const jsonProxy = "/api/fetch/pubs?url="
 
 const fetchPubMed = (url) => {
 	return new Promise((resolve, reject) => {
@@ -88,6 +89,56 @@ const getPubMedCsv = (csvData) => {
 	return pubList;
 };
 
+const getPubMedJson = (url) => {
+	let pubMedData = fetch(url, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json'
+		}
+	})
+		.then(response => response.json())
+		.then(data => {
+			return data;
+			// let citationArray = json.items;
+			// let newCitationArray = citationArray.map(x => {
+			// 	let authors = x["creator"];
+			// 	if (typeof(authors) === "string") {
+			// 		authors = authors.split(" ").pop();
+			// 	} else {
+			// 		authors = authors.map(x => {
+			// 			return x.split(" ").pop();
+			// 		});
+			// 		switch(authors.length) {
+			// 			case 1:
+			// 				authors = authors[0];
+			// 				break;
+			// 			case 2:
+			// 				authors = authors[0] + " and " + authors[1];
+			// 				break;
+			// 			case 3:
+			// 				authors = authors[0] + ", " + authors[1] + ", and " + authors[2];
+			// 				break;
+			// 			default:
+			// 				authors = authors[0] + " et al.";
+			// 				break;
+			// 		}
+			// 	}
+			// 	let title = he.decode(x["title"]);
+			// 	title = title.replace(/(<([^>]+)>)/gi, "");  // strip out any html tags
+			// 	title = he.decode(title);
+			// 	return {
+			// 		title: title,
+			// 		source: x["source"],
+			// 		year: x["date"].split("-")[0],
+			// 		authors: authors,
+			// 		link: x["link"]
+			// 	};
+			// });
+			// return newCitationArray;
+		});
+	return pubMedData;
+};
+
 const PubMedItem = (props) => {
 	return (
 		<li>
@@ -129,6 +180,25 @@ class PubMedList extends React.Component {
 						failed: true
 					});
 				});
+		} else if (this.props.hasOwnProperty('jsonUrl') && this.props.jsonUrl) {
+			getPubMedJson(this.props.jsonUrl)
+				.then(data => {
+					let citations = data.map(x => {
+						return (<PubMedItem data={x} />);
+					});
+					this.setState({
+						loaded: true,
+						numRecords: citations.length,
+						citations: citations
+					});
+				})
+				.catch(error => {
+					console.log("Error loading PubMed data.");
+					console.log(error);
+					this.setState({
+						failed: true
+					});
+				});
 		} else {
 			let pubMedList = getPubMedCsv(Data);
 			let citations = pubMedList.map(x => {
@@ -153,8 +223,9 @@ class PubMedList extends React.Component {
 	}
 }
 
-// const pubMedUrl = corsProxy + "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
-const pubMedUrl = "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
+let pubMedUrl = "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
+pubMedUrl = jsonProxy + pubMedUrl;
+// pubMedUrl = corsProxy + pubMedUrl;
 const wrapper = document.getElementById("container");
-// wrapper ? ReactDOM.render(<PubMedList url={ pubMedUrl } />, wrapper) : false;
+// wrapper ? ReactDOM.render(<PubMedList jsonUrl={ pubMedUrl } />, wrapper) : false;
 wrapper ? ReactDOM.render(<PubMedList />, wrapper) : false;
