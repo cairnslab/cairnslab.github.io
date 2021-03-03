@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Data from '../data/labmemberprofiles.csv';
+// import Data from '../data/labmemberprofiles.csv';
 
 const LabMember = (obj) => {
 	let gitHubLink = obj.github && obj.github != "NA" ?
@@ -44,4 +44,17 @@ const LabMembers = ({ csvData }) => {
 };
 
 const wrapper = document.getElementById("container");
-wrapper ? ReactDOM.render(<LabMembers csvData={ Data }/>, wrapper) : false;
+// wrapper ? ReactDOM.render(<LabMembers csvData={ Data }/>, wrapper) : false;
+let Data = null;
+let LabMemberData = fetch("/data/labmemberprofiles.json", {
+	method: 'GET',
+	headers: {
+		'Content-Type': 'application/json'
+	}
+})
+.then(response => response.json())
+.then(data => {
+	Data = data;
+	wrapper ? ReactDOM.render((Data == null ? (<div>Loading data...</div>) : (<LabMembers csvData={ Data } />)), wrapper) : false;
+});
+// wrapper ? ReactDOM.render((Data == null ? (<div>Loading data...</div>) : (<LabMembers csvData={ Data } />)), wrapper) : false;
