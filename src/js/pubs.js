@@ -162,6 +162,7 @@ class PubMedList extends React.Component {
 
 	componentDidMount() {
 		if (this.props.hasOwnProperty('url') && this.props.url) {
+			console.log("Reading RSS...");
 			getPubMedRss(this.props.url)
 				.then(data => {
 					let citations = data.map(x => {
@@ -181,6 +182,7 @@ class PubMedList extends React.Component {
 					});
 				});
 		} else if (this.props.hasOwnProperty('jsonUrl') && this.props.jsonUrl) {
+			console.log("Reading JSON...");
 			getPubMedJson(this.props.jsonUrl)
 				.then(data => {
 					let citations = data.map(x => {
@@ -223,9 +225,10 @@ class PubMedList extends React.Component {
 	}
 }
 
-let pubMedUrl = "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
-pubMedUrl = jsonProxy + pubMedUrl;
+// let pubMedUrl = "https://pubmed.ncbi.nlm.nih.gov/rss/search/1HYeX0emtvYaHZ7kpvO6xce88aYvtrvXGjuhNbIrVjcDnzxQhv/?limit=15&utm_campaign=pubmed-2&fc=20201202024910";
+// pubMedUrl = jsonProxy + pubMedUrl;
 // pubMedUrl = corsProxy + pubMedUrl;
+let pubMedUrl = "/data/latestpubs.json";
 const wrapper = document.getElementById("container");
-// wrapper ? ReactDOM.render(<PubMedList jsonUrl={ pubMedUrl } />, wrapper) : false;
-wrapper ? ReactDOM.render(<PubMedList />, wrapper) : false;
+wrapper ? ReactDOM.render(<PubMedList jsonUrl={ pubMedUrl } />, wrapper) : false;
+// wrapper ? ReactDOM.render(<PubMedList />, wrapper) : false;
